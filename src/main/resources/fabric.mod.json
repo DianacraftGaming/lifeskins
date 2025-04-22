@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "lifeskins",
-	"version": "${version}",
+	"version": "1.0",
 	"name": "Life Skins",
 	"description": "An automatic skin changer depending on the life amount for the Life Series mod!",
 	"authors": [
