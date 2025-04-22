@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "lifeskins",
+	"version": "${version}",
+	"name": "Life Skins",
+	"description": "An automatic skin changer depending on the life amount for the Life Series mod!",
+	"authors": [
+		"DianacraftGaming"
+	],
+	"contact": {
+		"sources": "https://github.com/DianacraftGaming/lifeskins"
+	},
+	"license": "MIT",
+	"icon": "assets/lifeskins/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.dianacraft.lifeskins.LifeSkins"
+		],
+		"fabric-datagen": [
+			"net.dianacraft.lifeskins.LifeSkinsDataGenerator"
+		]
+	},
+	"mixins": [
+		"lifeskins.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.13",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*",
+		"lifeseries": "*",
+		"fabrictailor": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
