@@ -16,6 +16,18 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+
+	//maven { url = "https://github.com/Mat0u5/LifeSeries/blob/main/src/main/java/" }
+	//maven { url = "https://github.com/samolego/FabricTailor/blob/master/src/main/java/" }
+	// SEND HELP SEND HELP SEND HELP SEND HELP SEND HELP SEND HELP
+	// I HAVE NO IDEA WANT IM DOING
+	// IT'S BEEN 3 DAYS OF STARING AT A SCREEN AND I STILL HAVEN'T FIGURED THIS OUT
+	// DOCS DON'T HELP IM ON THE EDGE OF DESPAIR
+	// ok nvm we're good
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+	}
 }
 
 fabricApi {
@@ -32,7 +44,12 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	
+
+	// Other stuff [i tried]
+	//modImplementation "net.mat0u5.lifeseries:lifeseries"
+	//modImplementation "org.samo_lego.fabrictailor:fabrictailor"
+	modImplementation "maven.modrinth:life-series:${project.lifeseries_version}"
+	modImplementation "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
 }
 
 processResources {
