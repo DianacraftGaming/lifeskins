@@ -5,7 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import net.dianacraft.lifeskins.command.SkinReloadCommand;
+import net.dianacraft.lifeskins.command.LifeSkinsCommand;
 
 public class LifeSkins implements ModInitializer {
 	public static final String MOD_ID = "lifeskins";
@@ -24,8 +24,8 @@ public class LifeSkins implements ModInitializer {
 		LOGGER.info("Initialising Life Skins...");
 		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
 			// Registering /skin reload
-			SkinReloadCommand.register(dispatcher);
+			LifeSkinsCommand.register(dispatcher);
 		});
-		LOGGER.info("Life Skins commands initialised!");
+		//LOGGER.info("Life Skins commands initialised!");
 	}
 }
