@@ -3,11 +3,9 @@ package net.dianacraft.lifeskins.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.dianacraft.lifeskins.util.SkinPathFinder;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
 import org.samo_lego.fabrictailor.command.SkinCommand;
 import static net.mat0u5.lifeseries.Main.currentSeries;
@@ -22,13 +20,14 @@ public class LifeSkinsCommand {
     public static int reloadSkin(CommandContext<ServerCommandSource> context, boolean logLives) throws CommandSyntaxException {
         //context.getSource().sendFeedback(() -> Text.literal("Reloading the skin..."), false);
         ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+        SkinPathFinder spf = new SkinPathFinder(player);
         if (!currentSeries.hasAssignedLives(player) && logLives) {
             player.sendMessage(Text.of("You have not been assigned any lives yet."));
             return -1;
         }
 
-        if (SkinPathFinder.hasSkins(player)) {
-            SkinCommand.setSkin(player, () -> setSkinFromFile(SkinPathFinder.getSkinPath(player), false));
+        if (spf.hasSkins()) {
+            SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getSkinPath(), false));
         } else if (logLives) {
             player.sendMessage(Text.of("§cCouldn't find any life skins! Make sure you set them up correctly, run \"/lifeskins info\" to get setup instructions"), false);
             return -1;
@@ -62,8 +61,9 @@ public class LifeSkinsCommand {
                         .then(literal("skins")
                                 .executes(context -> {
                                             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+                                            SkinPathFinder spf = new SkinPathFinder(player);
                                             if (player != null) {
-                                                return SkinPathFinder.logSkins(player);
+                                                return spf.logSkins();
                                             }
                                             return -1;
                                         }

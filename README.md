@@ -2,7 +2,7 @@
 A mod for changing player skins depending on the life amount without needing to restart Minecraft! Requires the [Life Series](https://modrinth.com/mod/life-series/) mod for lives tracking! Also requires [Fabric Tailor](https://modrinth.com/mod/fabrictailor/) to run properly (Hoping to make it optional in a future update)
 
 ## How to use
-It's quite simple, actually. Running `/lifeskins reloadskin`, `/skin reload` or `/lives` will update your skin according to the amount of lives that you have! It requires a bit of setting up though, how to do that is described below!
+It's quite simple, actually! `/lifeskins reloadskin`, `/skin reload` or `/lives` will update your skin according to the amount of lives that you have! It requires a bit of setting up though, how to do that is described below!
 
 `/lifeskins info` will show setup instructions for skins
 
