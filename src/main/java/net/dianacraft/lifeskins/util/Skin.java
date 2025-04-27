@@ -1,30 +1,30 @@
 package net.dianacraft.lifeskins.util;
 
 public class Skin {
-    private String skinName;
-    private int lifeCount;
-    private boolean useSlim;
+    private String name;
+    private int lives;
+    private boolean slim;
 
-    public Skin(String name, int lives){
-        skinName = name;
-        lifeCount = lives;
+    public Skin(String skinName, int lifeCount){
+        name = skinName;
+        lives = lifeCount;
     }
 
-    public Skin(String name, int lives, boolean slim){
-        skinName = name;
-        lifeCount = lives;
-        useSlim = slim;
+    public Skin(String skinName, int lifeCount, boolean useSlim){
+        name = skinName;
+        lives = lifeCount;
+        slim = useSlim;
     }
 
     public boolean getSlim(){
-        return useSlim;
+        return slim;
     }
 
     public int getLifeCount() {
-        return lifeCount;
+        return lives;
     }
 
-    public String getSkinName() {
-        return skinName;
+    public String getName() {
+        return name;
     }
 }

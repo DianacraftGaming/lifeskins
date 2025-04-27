@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.dianacraft.lifeskins.util.SkinPathFinder;
+import net.mat0u5.lifeseries.Main;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -27,7 +28,7 @@ public class LifeSkinsCommand {
         }
 
         if (spf.hasSkins()) {
-            SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getSkinPath(), false));
+            SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getSkinPath(), SkinPathFinder.getSlim(spf.getSkin(Main.currentSeries.getPlayerLives(player)))));
         } else if (logLives) {
             player.sendMessage(Text.of("§cCouldn't find any life skins! Make sure you set them up correctly, run \"/lifeskins info\" to get setup instructions"), false);
             return -1;

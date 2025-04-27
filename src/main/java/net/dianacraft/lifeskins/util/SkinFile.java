@@ -1,23 +1,26 @@
 package net.dianacraft.lifeskins.util;
 
-public class SkinFile {
-    private Skin[] skinArray;
-    private boolean useSlim;
+import java.util.ArrayList;
+import java.util.List;
 
-    public SkinFile(boolean slim){
-        useSlim = slim;
+public class SkinFile {
+    private List<Skin> skins = new ArrayList<>();
+    private boolean slim;
+
+    public SkinFile(boolean useSlim){
+        slim = useSlim;
     }
 
-    public SkinFile(Skin[] skins, boolean slim){
-        skinArray = skins;
-        useSlim = slim;
+    public SkinFile(List<Skin> skinList, boolean useSlim){
+        skins = skinList;
+        slim = useSlim;
     }
 
     public boolean getSlim(){
-        return useSlim;
+        return slim;
     }
 
-    public Skin[] getSkinArray() {
-        return skinArray;
+    public List<Skin> getSkinArray() {
+        return skins;
     }
 }
