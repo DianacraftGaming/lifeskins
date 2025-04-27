@@ -24,16 +24,16 @@ public class SkinPathFinder {
 
     public SkinPathFinder(ServerPlayerEntity playerEntity){
         player = playerEntity;
-        directoryPath = "config/lifeskins/"+"Player";//+player.getName().getString(); //TODO: Username here
+        directoryPath = "config/lifeskins/"+player.getName().getString();
 
         SkinFile defaultSkinFile = new SkinFile(false);
         Gson gson = new Gson();
-        try (Reader reader = new FileReader(directoryPath + "/skins.json")) {
+        try {
+            Reader reader = new FileReader(directoryPath + "/skins.json");
             skinFile = gson.fromJson(reader, SkinFile.class);
-
         } catch (IOException e) {
             if (new File(directoryPath).mkdir()){
-                LOGGER.info("Created a life skins folder for "+player.getName().getString()); //TODO: Username here
+                LOGGER.info("Created a life skins folder for "+player.getName().getString());
             }
             try (Writer writer = new FileWriter(directoryPath + "/skins.json")) {
                 gson.toJson(defaultSkinFile, writer);
@@ -47,7 +47,7 @@ public class SkinPathFinder {
     }
 
     public boolean hasSkins(){
-        if (skins == null) {
+        if (skins.isEmpty()) {
             //return false; // Check skins in the folder
             skinMap = initializeSkinMap();
             return !skins.isEmpty();
@@ -87,10 +87,12 @@ public class SkinPathFinder {
         if (allFiles == null) return skinArray;
         for (String file : allFiles) {
             String[] tmp = file.split("\\.");
-            if (Objects.equals(tmp[1], "png")) {
-                if (tmp[0].matches("-?(0|[1-9]\\d*)")) {
-                    Skin skin = new Skin(tmp[0] + ".png", Integer.parseInt(tmp[0]), skinFile.getSlim());
-                    skinArray.add(skin);
+            if (tmp.length == 2) {
+                if (Objects.equals(tmp[1], "png")) {
+                    if (tmp[0].matches("-?(0|[1-9]\\d*)")) {
+                        Skin skin = new Skin(tmp[0] + ".png", Integer.parseInt(tmp[0]), skinFile.getSlim());
+                        skinArray.add(skin);
+                    }
                 }
             }
         }
@@ -119,7 +121,7 @@ public class SkinPathFinder {
                 }
             }
             if (!hasskin) {
-                map.put(i, currentskin);
+                map.put(i, currentskin/*.setLifeCount(i)*/);
             }
         }
         return map;
@@ -128,9 +130,19 @@ public class SkinPathFinder {
     public int logSkins(){
         player.sendMessage(Text.of("§e| Your skins:"));
         if (hasSkins()){
-            //player.sendMessage(Text.of("- a skin"));
+            for (int i = lowest; i <= highest; i++) {
+                String message = "";
+                if (skinMap.get(i).getLifeCount() > i){
+                    message += i + "-" + skinMap.get(i).getLifeCount();
+                    i = skinMap.get(i).getLifeCount();
+                } else {
+                    message += i;
+                }
 
-            for (int i = 0; i < skins.size(); i++) {
+                if (message.equals("1"))
+                    player.sendMessage(Text.of(message + " Life: §b"+skinMap.get(i).getName()));
+                else
+                    player.sendMessage(Text.of(message + " Lives: §b"+skinMap.get(i).getName()));
                 //skins.get(i).getLifeCount();
             }
         } else {

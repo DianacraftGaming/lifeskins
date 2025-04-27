@@ -24,7 +24,6 @@ repositories {
 	// IT'S BEEN 3 DAYS OF STARING AT A SCREEN AND I STILL HAVEN'T FIGURED THIS OUT
 	// DOCS DON'T HELP IM ON THE EDGE OF DESPAIR
 	// ok nvm we're good
-	// oh no i need to do this again to be able to use json
 	maven {
 		name = "Modrinth"
 		url = "https://api.modrinth.com/maven"

@@ -24,6 +24,8 @@ public class Skin {
         return lives;
     }
 
+    public Skin setLifeCount(int lifeCount){ return new Skin(name, lifeCount, slim); }
+
     public String getName() {
         return name;
     }

@@ -28,7 +28,8 @@ public class LifeSkinsCommand {
         }
 
         if (spf.hasSkins()) {
-            SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getSkinPath(), SkinPathFinder.getSlim(spf.getSkin(Main.currentSeries.getPlayerLives(player)))));
+            //SkinCommand.setSkin(player, () -> setSkinFromFile("config/lifeskins/Player/1.png", true));
+            SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getSkinPath(), SkinPathFinder.getSlim(spf.getSkin(Main.currentSeries.getPlayerLives(player)))));  // TODO: [BUG] skins always set as classic, even if i hardcode true, seems to be a fabrictailor issue
         } else if (logLives) {
             player.sendMessage(Text.of("§cCouldn't find any life skins! Make sure you set them up correctly, run \"/lifeskins info\" to get setup instructions"), false);
             return -1;
@@ -53,7 +54,8 @@ public class LifeSkinsCommand {
                                                 player.sendMessage(Text.of("In the config folder create a folder with your username and put the skins you want to use inside!"));
                                                 player.sendMessage(Text.of("Each skin must be named after the amount of lives it apples to"));
                                                 player.sendMessage(Text.of("For example, §e\"3.png\""));
-                                                player.sendMessage(Text.of("§cOnly classic skins supported for now!"));
+                                                player.sendMessage(Text.of("If you want a slim-type skin, you need to create a skins.json file in the same folder and put the following text inside:"));
+                                                player.sendMessage(Text.of("§b { \"slim\": true }"));
                                             }
                                             return 1;
                                         }
@@ -62,8 +64,8 @@ public class LifeSkinsCommand {
                         .then(literal("skins")
                                 .executes(context -> {
                                             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
-                                            SkinPathFinder spf = new SkinPathFinder(player);
                                             if (player != null) {
+                                                SkinPathFinder spf = new SkinPathFinder(player);
                                                 return spf.logSkins();
                                             }
                                             return -1;
@@ -71,12 +73,13 @@ public class LifeSkinsCommand {
                                 )
                         )
         );
+        /*
         dispatcher.register(literal("lives").executes(context -> {
             int tmp = LivesCommand.showLives(context.getSource());
             if (tmp > 0) {
                 return reloadSkin(context, false);
             } else return tmp;
-        }));
+        }));*/ //TODO: [BUG]: /lives only runs the Life Series command, fully ignoring mine. Not sure how i can go about fixing it.
         dispatcher.register(literal("skin").then(literal("reload").executes(context -> { return reloadSkin(context, true); })));
     }
 }
