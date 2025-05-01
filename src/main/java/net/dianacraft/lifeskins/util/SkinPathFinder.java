@@ -4,16 +4,14 @@ import net.mat0u5.lifeseries.Main;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import com.google.gson.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.*;
 
-import static net.dianacraft.lifeskins.LifeSkins.MOD_ID;
+import static net.dianacraft.lifeskins.LifeSkins.LOGGER;
 
 public class SkinPathFinder {
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     SkinFile skinFile;
     List<Skin> skins;
     Map<Integer, Skin> skinMap;
@@ -26,23 +24,30 @@ public class SkinPathFinder {
         player = playerEntity;
         directoryPath = "config/lifeskins/"+player.getName().getString();
 
-        SkinFile defaultSkinFile = new SkinFile(false);
+        skinFile = new SkinFile(false);
         Gson gson = new Gson();
         try {
             Reader reader = new FileReader(directoryPath + "/skins.json");
             skinFile = gson.fromJson(reader, SkinFile.class);
+            reader.close();
         } catch (IOException e) {
             if (new File(directoryPath).mkdir()){
-                LOGGER.info("Created a life skins folder for "+player.getName().getString());
+                LOGGER.info("Created a life skins folder for {}", player.getName().getString());
             }
-            try (Writer writer = new FileWriter(directoryPath + "/skins.json")) {
-                gson.toJson(defaultSkinFile, writer);
-                skinFile = defaultSkinFile;
-            } catch (IOException f) {
-                throw new RuntimeException(f);
+            try {
+                Writer writer = new FileWriter(directoryPath + "/skins.json");
+                gson.toJson(skinFile, writer);
+                writer.flush();
+                writer.close();
+            } catch (Exception f) {
+                if (LOGGER.isWarnEnabled())
+                    LOGGER.warn("Failed to initialize a skins.json file for " + player.getName().getString());
             }
         }
-        skins = skinFile.getSkinArray();
+        if (skins == null)
+            skins = new SkinFile(false).getSkinArray();
+        else
+            skins = skinFile.getSkinArray();
         skinMap = initializeSkinMap();
     }
 
@@ -101,7 +106,7 @@ public class SkinPathFinder {
 
     private Map<Integer, Skin> initializeSkinMap(){
         Map<Integer, Skin> map = new HashMap<>();
-        if (skins == null) skins = findSkins();
+        if (skins.isEmpty()) skins = findSkins();
         for (Skin skin : skins) {
             if (skin.getLifeCount() > highest) {
                 highest = skin.getLifeCount();
@@ -110,10 +115,10 @@ public class SkinPathFinder {
                 lowest = skin.getLifeCount();
             }
         }
-        Skin currentskin = new Skin("", 0);
-        for (int i = highest; i >= lowest; i--) {
+        Skin currentskin = new Skin("", -51);
+        for (int i = lowest; i <= highest; i++) {
             boolean hasskin = false;
-            for (Skin skin : skins) {
+            for (Skin skin: skins){
                 if (skin.getLifeCount() == i) {
                     hasskin = true;
                     currentskin = skin;
@@ -130,23 +135,36 @@ public class SkinPathFinder {
     public int logSkins(){
         player.sendMessage(Text.of("§e| Your skins:"));
         if (hasSkins()){
+
+            /*
+            for (int i = lowest; i <= highest; i++) {
+                String message = String.valueOf(i);
+                if (message.equals("1"))
+                    player.sendMessage(Text.of(message + " Life: §b"+skinMap.get(i).getName()));
+                else
+                    player.sendMessage(Text.of(message + " Lives: §b"+skinMap.get(i).getName()));
+                //skins.get(i).getLifeCount();
+            }*/ //THE FALLBACK IN CASE ANYTHING GOES WRONG
+
             for (int i = lowest; i <= highest; i++) {
                 String message = "";
-                if (skinMap.get(i).getLifeCount() > i){
-                    message += i + "-" + skinMap.get(i).getLifeCount();
-                    i = skinMap.get(i).getLifeCount();
-                } else {
+
+                if (i < highest)
+                    if (skinMap.get(i).equals(skinMap.get(i + 1)))
+                        continue;
+                if (skinMap.get(i).getLifeCount() == i){
                     message += i;
+                } else {
+                    message += skinMap.get(i).getLifeCount() + "-" + i;
                 }
 
                 if (message.equals("1"))
                     player.sendMessage(Text.of(message + " Life: §b"+skinMap.get(i).getName()));
                 else
                     player.sendMessage(Text.of(message + " Lives: §b"+skinMap.get(i).getName()));
-                //skins.get(i).getLifeCount();
             }
         } else {
-            player.sendMessage(Text.of("- none"));
+            player.sendMessage(Text.of("- no skins found, run \"/lifeskins info\" to get setup instructions."));
         }
         return 1;
     }

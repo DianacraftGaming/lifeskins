@@ -10,8 +10,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.samo_lego.fabrictailor.command.SkinCommand;
 import static net.mat0u5.lifeseries.Main.currentSeries;
-import static net.mat0u5.lifeseries.utils.PermissionManager.isAdmin;
-import net.mat0u5.lifeseries.command.LivesCommand;
 
 import static net.minecraft.server.command.CommandManager.literal;
 import static org.samo_lego.fabrictailor.util.SkinFetcher.setSkinFromFile;
@@ -52,10 +50,10 @@ public class LifeSkinsCommand {
                                             if (player != null) {
                                                 player.sendMessage(Text.of("§e| Skin setup info:"));
                                                 player.sendMessage(Text.of("In the config folder create a folder with your username and put the skins you want to use inside!"));
-                                                player.sendMessage(Text.of("Each skin must be named after the amount of lives it apples to"));
+                                                player.sendMessage(Text.of("Each skin must be named after the amount of lives it applies to"));
                                                 player.sendMessage(Text.of("For example, §e\"3.png\""));
                                                 player.sendMessage(Text.of("If you want a slim-type skin, you need to create a skins.json file in the same folder and put the following text inside:"));
-                                                player.sendMessage(Text.of("§b { \"slim\": true }"));
+                                                player.sendMessage(Text.of("§b{ \"slim\": true }"));
                                             }
                                             return 1;
                                         }

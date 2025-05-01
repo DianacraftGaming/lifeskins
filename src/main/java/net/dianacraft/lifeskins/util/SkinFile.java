@@ -23,4 +23,8 @@ public class SkinFile {
     public List<Skin> getSkinArray() {
         return skins;
     }
+
+    public void setSkinArray(List<Skin> array){
+        skins = array;
+    }
 }
