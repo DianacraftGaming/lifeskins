@@ -21,7 +21,7 @@ Automatically the skins are assigned the classic model, if you want the slim one
 
 `name` - the name of the file you want to use for the skin, for example `skin.png`.
 
-`lives` - the amount of lives the skin corresponds to, for example `6`
+`lives` - the minimum amount of lives you need to have for the skin to activate, for example `4`
 
 `slim` - whether the slim model should be used. overrides the global field from the file
 
