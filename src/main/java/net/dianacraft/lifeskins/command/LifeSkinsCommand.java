@@ -35,6 +35,15 @@ public class LifeSkinsCommand {
         return 1;
     }
 
+    public static int reloadSkin(ServerPlayerEntity player, int lives) throws CommandSyntaxException {
+        SkinPathFinder spf = new SkinPathFinder(player);
+
+        if (spf.hasSkins()) {
+            SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getSkinPath(lives), SkinPathFinder.getSlim(spf.getSkin(Main.currentSeries.getPlayerLives(player)))));  // TODO: [BUG] skins always set as classic, even if i hardcode true, seems to be a fabrictailor issue
+        }
+        return 1;
+    }
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
                 literal("lifeskins")

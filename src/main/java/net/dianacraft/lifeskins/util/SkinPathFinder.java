@@ -44,7 +44,7 @@ public class SkinPathFinder {
                     LOGGER.warn("Failed to initialize a skins.json file for " + player.getName().getString());
             }
         }
-        if (skins == null)
+        if (skinFile.getSkinArray() == null)
             skins = new SkinFile(false).getSkinArray();
         else
             skins = skinFile.getSkinArray();
@@ -67,6 +67,10 @@ public class SkinPathFinder {
             playerLives = Main.currentSeries.getPlayerLives(player);
         }
         return directoryPath+"/"+getSkin(playerLives).getName();
+    }
+
+    public String getSkinPath(int lives){
+        return directoryPath+"/"+getSkin(lives).getName();
     }
 
     public Skin getSkin(Integer lives){
@@ -168,7 +172,6 @@ public class SkinPathFinder {
         }
         return 1;
     }
-    //TODO: log skin list method
 
 
 }

@@ -3,7 +3,7 @@
 	"package": "net.dianacraft.lifeskins.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"SeriesMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
