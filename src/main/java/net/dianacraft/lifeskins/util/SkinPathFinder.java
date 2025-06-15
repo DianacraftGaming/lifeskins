@@ -19,6 +19,7 @@ public class SkinPathFinder {
     private int highest = -50; //placeholder values
     ServerPlayerEntity player;
     String directoryPath;
+    //Skin defaultSkin;
 
     public SkinPathFinder(ServerPlayerEntity playerEntity){
         player = playerEntity;
@@ -161,6 +162,9 @@ public class SkinPathFinder {
                 } else {
                     message += skinMap.get(i).getLifeCount() + "-" + i;
                 }
+                if (i == highest){
+                    message += "+";
+                }
 
                 if (message.equals("1"))
                     player.sendMessage(Text.of(message + " Life: §b"+skinMap.get(i).getName()));
@@ -173,5 +177,7 @@ public class SkinPathFinder {
         return 1;
     }
 
-
+    public String getDirectoryPath() {
+        return directoryPath;
+    }
 }
