@@ -1,11 +1,8 @@
 package net.dianacraft.lifeskins.mixin;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.dianacraft.lifeskins.command.LifeSkinsCommand;
 import net.dianacraft.lifeskins.util.SkinPathFinder;
-import net.mat0u5.lifeseries.Main;
-import net.mat0u5.lifeseries.series.Series;
-import net.mat0u5.lifeseries.utils.TaskScheduler;
+import net.mat0u5.lifeseries.seasons.season.Season;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.samo_lego.fabrictailor.command.SkinCommand;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,20 +10,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import static net.dianacraft.lifeskins.LifeSkins.LOGGER;
 import static net.dianacraft.lifeskins.command.LifeSkinsCommand.reloadSkin;
-import static net.mat0u5.lifeseries.Main.currentSeries;
-import static net.mat0u5.lifeseries.series.SeriesList.*;
-import static net.mat0u5.lifeseries.series.limitedlife.LimitedLife.*;
+import static net.mat0u5.lifeseries.Main.currentSeason;
+import static net.mat0u5.lifeseries.seasons.season.Seasons.LIMITED_LIFE;
+import static net.mat0u5.lifeseries.seasons.season.limitedlife.LimitedLife.*;
 import static org.samo_lego.fabrictailor.util.SkinFetcher.fetchSkinByName;
-import static org.samo_lego.fabrictailor.util.SkinFetcher.setSkinFromFile;
 
-@Mixin(Series.class)
-public class SeriesMixin {
+@Mixin(Season.class)
+public class SeasonMixin {
 
     @Inject(method = "setPlayerLives", at = @At("HEAD"))
     private void setPlayerLives(ServerPlayerEntity player, int lives, CallbackInfo ci) {
@@ -44,9 +36,9 @@ public class SeriesMixin {
     @Inject(method = "reloadPlayerTeam", at = @At("HEAD"))
     private void reloadPlayerTeam(ServerPlayerEntity player, CallbackInfo ci) {
 
-        if(currentSeries.getSeries() == LIMITED_LIFE){
+        if(currentSeason.getSeason() == LIMITED_LIFE){
             try {
-                Integer lives = currentSeries.getPlayerLives(player);
+                Integer lives = currentSeason.getPlayerLives(player);
                 if (lives == null) {
                     return;
                 } else if (lives <= 0) {
@@ -83,7 +75,7 @@ public class SeriesMixin {
     @Inject(method = "onPlayerRespawn", at = @At("HEAD"))
     public void onPlayerRespawn(ServerPlayerEntity player, CallbackInfo ci) {
         try {
-            reloadSkin(player, currentSeries.getPlayerLives(player));
+            reloadSkin(player, currentSeason.getPlayerLives(player));
         } catch (CommandSyntaxException e) {
             //throw new RuntimeException(e);
         }
