@@ -64,8 +64,8 @@ public class SkinPathFinder {
 
     public String getSkinPath(){ // Read from skins.json and get the skin path
         int playerLives = 0;
-        if (Main.currentSeason.hasAssignedLives(player)) {
-            playerLives = Main.currentSeason.getPlayerLives(player);
+        if (Main.livesManager.hasAssignedLives(player)) {
+            playerLives = Main.livesManager.getPlayerLives(player);
         }
         return directoryPath+"/"+getSkin(playerLives).getName();
     }

@@ -3,6 +3,7 @@
 	"package": "net.dianacraft.lifeskins.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+      "LivesManagerMixin",
       "SeasonMixin"
 	],
 	"injectors": {
