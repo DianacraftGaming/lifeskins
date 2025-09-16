@@ -4,9 +4,11 @@ A *fully server-side* mod for changing player skins depending on the life amount
 ## How to use
 It's quite simple, really! Your skin will automatically update whenever your amount of lives changes, whether by death, commands, automatic assignment, you name it! It requires a bit of setting up though, how to do that is described below!
 
-`/lifeskins reloadskin` or `/skin reload` will manually set your skin to the one corresponding to your life amount if automatic reload failed
+`/lifeskins reload` will manually set your skin to the one corresponding to your life amount if automatic reload failed
 
-`/lifeskins info` will show setup instructions for skins
+`/lifeskins reloadAll` will reload the skins of all players, can only be run by an admin
+
+`/lifeskins setup` will show setup instructions for skins
 
 `/lifeskins skins` will show the skins the mod recognises! Great for checking if everything is set up correctly!
 
