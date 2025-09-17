@@ -15,8 +15,7 @@ import static net.dianacraft.lifeskins.LifeSkins.LOGGER;
 import static net.mat0u5.lifeseries.Main.currentSeason;
 import static net.mat0u5.lifeseries.Main.livesManager;
 import static net.mat0u5.lifeseries.seasons.season.Seasons.LIMITED_LIFE;
-import static net.mat0u5.lifeseries.seasons.season.limitedlife.LimitedLifeLivesManager.RED_TIME;
-import static net.mat0u5.lifeseries.seasons.season.limitedlife.LimitedLifeLivesManager.YELLOW_TIME;
+import static net.mat0u5.lifeseries.seasons.season.limitedlife.LimitedLifeLivesManager.*;
 import static net.mat0u5.lifeseries.utils.player.PermissionManager.isAdmin;
 import static net.minecraft.server.command.CommandManager.literal;
 import static org.samo_lego.fabrictailor.util.SkinFetcher.setSkinFromFile;
@@ -74,12 +73,12 @@ public class LifeSkinsCommand {
     public static int getLivesForLimited(Integer time){
         if (time <= 0) {
             return 0;
-        } else if (time > YELLOW_TIME) {
-            return 3;
-        } else if (time > RED_TIME) {
-            return 2;
-        } else  {
+        } else if (time <= RED_TIME) {
             return 1;
+        } else if (time <= YELLOW_TIME) {
+            return 2;
+        } else {
+            return time <= DEFAULT_TIME ? 3 : 4;
         }
     }
 
