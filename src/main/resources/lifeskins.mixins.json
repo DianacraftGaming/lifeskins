@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
       "LivesManagerMixin",
+	  "LimitedLivesManagerMixin",
 	  "ServerPlayerEntityMixin"
 	],
 	"injectors": {
