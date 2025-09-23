@@ -4,20 +4,22 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.dianacraft.lifeskins.util.SkinPathFinder;
-import net.mat0u5.lifeseries.seasons.season.Seasons;
+import net.mat0u5.lifeseries.utils.player.PermissionManager;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.samo_lego.fabrictailor.command.SkinCommand;
 
-import static net.dianacraft.lifeskins.LifeSkins.LOGGER;
 import static net.mat0u5.lifeseries.Main.currentSeason;
 import static net.mat0u5.lifeseries.Main.livesManager;
 import static net.mat0u5.lifeseries.seasons.season.Seasons.LIMITED_LIFE;
 import static net.mat0u5.lifeseries.seasons.season.limitedlife.LimitedLifeLivesManager.*;
 import static net.mat0u5.lifeseries.utils.player.PermissionManager.isAdmin;
+import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
+import static org.samo_lego.fabrictailor.util.SkinFetcher.fetchSkinByName;
 import static org.samo_lego.fabrictailor.util.SkinFetcher.setSkinFromFile;
 
 public class LifeSkinsCommand {
@@ -58,6 +60,16 @@ public class LifeSkinsCommand {
         }
     }
 
+    public static void stealSkin(ServerPlayerEntity actor, ServerPlayerEntity target){
+        String path = SkinPathFinder.getSkinPath(target);
+        if (path == null){
+            SkinCommand.setSkin(actor, () -> fetchSkinByName(target.getName().getString()));
+        } else {
+            SkinCommand.setSkin(actor, () -> setSkinFromFile(path, SkinPathFinder.getSlim(target)));
+        }
+    }
+
+
     public static int getLivesForLimited(ServerPlayerEntity player){
         if(livesManager.hasAssignedLives(player)){
             Integer lives = livesManager.getPlayerLives(player);
@@ -87,7 +99,18 @@ public class LifeSkinsCommand {
                 literal("lifeskins")
                         .then(literal("reload")
                                 .executes(LifeSkinsCommand::contextReloadSkin)
-                        )
+                        )/*
+                        .then(literal("stealSkin")
+                                .requires(PermissionManager::isAdmin)
+                                .then(argument("player", EntityArgumentType.player())
+                                        .executes(context ->
+                                            {
+                                                stealSkin(context.getSource().getPlayerOrThrow(), EntityArgumentType.getPlayer(context, "player"));
+                                                return 1;
+                                            }
+                                        )
+                                )
+                        )*/
                         .then(literal("setup")
                                 .executes(context -> {
                                             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
@@ -127,7 +150,16 @@ public class LifeSkinsCommand {
                                             return -1;
                                         }
                                 )
-                        )/*
+                        )
+                /*
+                        .then(literal("steal")
+                                .requires(source -> isAdmin(source.getPlayer()))
+                                .then(argument("player", EntityArgumentType.player()).executes( context -> {
+                                    stealSkin(context.getSource().getPlayer(), EntityArgumentType.getPlayer(context, "player"));
+                                    return 1;
+                                }))
+                        )*/
+                /*
                         .then(literal("clearskin")
                                 .executes(context -> {
                                             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();

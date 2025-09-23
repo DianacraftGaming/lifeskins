@@ -10,6 +10,11 @@ import java.io.*;
 import java.util.*;
 
 import static net.dianacraft.lifeskins.LifeSkins.LOGGER;
+import static net.dianacraft.lifeskins.command.LifeSkinsCommand.getLivesForLimited;
+import static net.dianacraft.lifeskins.command.LifeSkinsCommand.reloadSkin;
+import static net.mat0u5.lifeseries.Main.currentSeason;
+import static net.mat0u5.lifeseries.Main.livesManager;
+import static net.mat0u5.lifeseries.seasons.season.Seasons.LIMITED_LIFE;
 
 public class SkinPathFinder {
     SkinFile skinFile;
@@ -91,7 +96,6 @@ public class SkinPathFinder {
     }
 
     private ArrayList<Skin> findSkins(){
-        //String username = "Player"; //player.getName().getString(); //"Player"; //TODO: Username here
         ArrayList<Skin> skinArray = new ArrayList<>();
         String[] allFiles = new File(directoryPath).list();
         if (allFiles == null) return skinArray;
@@ -179,5 +183,30 @@ public class SkinPathFinder {
 
     public String getDirectoryPath() {
         return directoryPath;
+    }
+
+    public static String getSkinPath(ServerPlayerEntity player){
+        SkinPathFinder spf = new SkinPathFinder(player);
+        if (spf.hasSkins()) {
+            if (currentSeason.getSeason() == LIMITED_LIFE) {
+                return spf.getSkinPath(getLivesForLimited(player));
+            } else {
+                return spf.getSkinPath();
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean getSlim(ServerPlayerEntity player){
+        SkinPathFinder spf = new SkinPathFinder(player);
+        if (spf.hasSkins()) {
+            if (currentSeason.getSeason() == LIMITED_LIFE) {
+                return spf.getSkin(getLivesForLimited(player)).getSlim();
+            } else {
+                return spf.getSkin(livesManager.getPlayerLives(player)).getSlim();
+            }
+        }
+        return false;
     }
 }
