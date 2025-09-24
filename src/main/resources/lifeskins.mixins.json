@@ -5,7 +5,8 @@
 	"mixins": [
       "LivesManagerMixin",
 	  "LimitedLivesManagerMixin",
-	  "ServerPlayerEntityMixin"
+	  "ServerPlayerEntityMixin",
+	  "PlayerDisguiseMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

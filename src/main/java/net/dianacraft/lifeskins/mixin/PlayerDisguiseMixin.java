@@ -9,20 +9,22 @@ import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerDisguise.class)
-public class PlayerDisguiseMixin extends ToggleableSuperpower {
+public class PlayerDisguiseMixin{
 
-    public PlayerDisguiseMixin(ServerPlayerEntity player) {
-        super(player);
-    }
+    //It's embarrassing how long it took me to get this file to compile
+    //lol that rhymed
 
-    public Superpowers getSuperpower() {
-        return Superpowers.PLAYER_DISGUISE;
+    private ServerPlayerEntity getPlayer() {
+        PlayerDisguise superpower = (PlayerDisguise)(Object)this;
+        return superpower.getPlayer();
     }
 
     @Inject(method = "activate", at = @At("TAIL"))
