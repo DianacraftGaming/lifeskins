@@ -9,25 +9,25 @@ import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerDisguise.class)
-public class PlayerDisguiseMixin{
+public class PlayerDisguiseMixin extends ToggleableSuperpower {
 
-    //It's embarrassing how long it took me to get this file to compile
-    //lol that rhymed
+    // THE LAST BUILD WAS STILL NOT GOOD ENOUGH. STOP THIS MADNESS
 
-    private ServerPlayerEntity getPlayer() {
-        PlayerDisguise superpower = (PlayerDisguise)(Object)this;
-        return superpower.getPlayer();
+    public PlayerDisguiseMixin(ServerPlayerEntity player) {
+        super(player);
     }
 
-    @Inject(method = "activate", at = @At("TAIL"))
+    public Superpowers getSuperpower() {
+        return Superpowers.PLAYER_DISGUISE;
+    }
+
+    @Inject(method = "activate", at = @At("TAIL"), remap = false)
     public void activate(CallbackInfo ci){
         ServerPlayerEntity player = getPlayer();
         if (player == null) return;
@@ -42,7 +42,7 @@ public class PlayerDisguiseMixin{
         }
     }
 
-    @Inject(method = "deactivate", at = @At("TAIL"))
+    @Inject(method = "deactivate", at = @At("TAIL"), remap = false)
     public void deactivate(CallbackInfo ci) throws CommandSyntaxException {
         LifeSkinsCommand.reloadSkin(getPlayer());
     }
