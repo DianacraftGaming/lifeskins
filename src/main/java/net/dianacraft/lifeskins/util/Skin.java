@@ -2,7 +2,8 @@ package net.dianacraft.lifeskins.util;
 
 public class Skin {
     private String name;
-    private int lives;
+    private String team;
+    private Integer lives;
     private boolean slim;
 
     public Skin(String skinName, int lifeCount){
@@ -20,13 +21,15 @@ public class Skin {
         return slim;
     }
 
-    public int getLifeCount() {
+    public Integer getLifeCount() {
         return lives;
     }
 
-    public Skin setLifeCount(int lifeCount){ return new Skin(name, lifeCount, slim); }
+    //public Skin setLifeCount(int lifeCount){ return new Skin(name, lifeCount, slim); }
 
     public String getName() {
         return name;
     }
+
+    public String getTeam() { return team; }
 }

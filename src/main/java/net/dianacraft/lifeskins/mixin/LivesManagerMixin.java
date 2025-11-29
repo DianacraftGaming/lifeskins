@@ -15,8 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.dianacraft.lifeskins.LifeSkins.LOGGER;
-import static net.dianacraft.lifeskins.command.LifeSkinsCommand.getLivesForLimited;
-import static net.dianacraft.lifeskins.command.LifeSkinsCommand.reloadSkin;
+import static net.dianacraft.lifeskins.command.LifeSkinsCommand.*;
 import static net.mat0u5.lifeseries.Main.currentSeason;
 import static net.mat0u5.lifeseries.seasons.other.WatcherManager.isWatcher;
 import static org.samo_lego.fabrictailor.util.SkinFetcher.fetchSkinByName;
@@ -28,7 +27,7 @@ public abstract class LivesManagerMixin {
 
     @Inject(method = "resetPlayerLife", at = @At("HEAD"))
     private void resetPlayerLife(ServerPlayerEntity player, CallbackInfo ci) {
-        SkinPathFinder spf = new SkinPathFinder(player);
+        SkinPathFinder spf = new SkinPathFinder(player.getNameForScoreboard());
         if (spf.hasSkins() && player.isAlive()){
             //File f = new File(spf.getDirectoryPath()+"/default.png");
             //if(f.isFile()){
@@ -49,7 +48,7 @@ public abstract class LivesManagerMixin {
         if (getPlayerLives(player) != null) prevLives = getPlayerLives(player);
         if (lives != prevLives){
             try {
-                reloadSkin(player, lives);
+                reloadSkinSubin(player, lives);
             } catch (CommandSyntaxException ignored) {}
         }
     }

@@ -11,11 +11,6 @@ public class SkinFile {
         slim = useSlim;
     }
 
-    public SkinFile(List<Skin> skinList, boolean useSlim){
-        skins = skinList;
-        slim = useSlim;
-    }
-
     public boolean getSlim(){
         return slim;
     }

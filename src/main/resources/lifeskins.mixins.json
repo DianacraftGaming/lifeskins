@@ -1,14 +1,14 @@
 {
-	"required": true,
-	"package": "net.dianacraft.lifeskins.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-      "LivesManagerMixin",
-	  "LimitedLivesManagerMixin",
-	  "ServerPlayerEntityMixin",
-	  "PlayerDisguiseMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "package": "net.dianacraft.lifeskins.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "LimitedLivesManagerMixin",
+    "LivesManagerMixin",
+    "SeasonMixin",
+    "ServerPlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

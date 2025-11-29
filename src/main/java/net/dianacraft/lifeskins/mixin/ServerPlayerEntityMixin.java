@@ -9,8 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dianacraft.lifeskins.command.LifeSkinsCommand.getLivesForLimited;
-import static net.dianacraft.lifeskins.command.LifeSkinsCommand.reloadSkin;
+import static net.dianacraft.lifeskins.command.LifeSkinsCommand.*;
 import static net.mat0u5.lifeseries.Main.currentSeason;
 import static net.mat0u5.lifeseries.Main.livesManager;
 import static net.mat0u5.lifeseries.seasons.season.Seasons.LIMITED_LIFE;
@@ -22,13 +21,8 @@ public class ServerPlayerEntityMixin {
         if (currentSeason.getSeason() == Seasons.UNASSIGNED) return;
         ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
         if (!livesManager.hasAssignedLives(player)) return;
-
         try {
-            if (currentSeason.getSeason() == LIMITED_LIFE){
-                reloadSkin(player, getLivesForLimited(player));
-            } else {
-                reloadSkin(player);
-            }
+            reloadSkinSubin(player);
         } catch (CommandSyntaxException ignored) {}
     }
 }

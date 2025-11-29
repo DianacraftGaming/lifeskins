@@ -22,6 +22,7 @@ public class LifeSkins implements ModInitializer {
 			// Registering /skin reload
 			LifeSkinsCommand.register(dispatcher);
 		});
+        //new ScoreboardMixin();
 		//LOGGER.info("Life Skins commands initialised!");
 	}
 }

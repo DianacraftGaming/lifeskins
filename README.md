@@ -23,11 +23,13 @@ Automatically the skins are assigned the classic model, if you want the slim one
 
 Skins can be changed at runtime and *don't* require a server restart.
 ### Advanced
-"skins.json" has more settings than just if it should use the slim model. This section assumes you already know how to work with json files. Instead of renaming your skins, you can initialise them in the file. To do that, create a `skins` array. Every object in the array represents a skin and has the following three fields:
+"skins.json" has more settings than just if it should use the slim model. This section assumes you already know how to work with json files. Instead of renaming your skins, you can initialise them in the file. To do that, create a `skins` array. Every object in the array represents a skin and has the following fields:
 
 `name` - the name of the file you want to use for the skin, for example `skin.png`.
 
 `lives` - the minimum amount of lives you need to have for the skin to activate, for example `4`
+
+`team` - [optional] field, alternative to `lives`. Whenever a player is in a team that has a name matching to this field, this skin will be given. For example, `lives_2` or `watcher`
 
 `slim` - whether the slim model should be used. overrides the global field from the file
 

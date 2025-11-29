@@ -5,7 +5,6 @@ import net.dianacraft.lifeskins.command.LifeSkinsCommand;
 import net.mat0u5.lifeseries.seasons.season.wildlife.wildcards.wildcard.superpowers.Superpowers;
 import net.mat0u5.lifeseries.seasons.season.wildlife.wildcards.wildcard.superpowers.ToggleableSuperpower;
 import net.mat0u5.lifeseries.seasons.season.wildlife.wildcards.wildcard.superpowers.superpower.PlayerDisguise;
-import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerDisguise.class)
 public class PlayerDisguiseMixin extends ToggleableSuperpower {
 
-    // THE LAST BUILD WAS STILL NOT GOOD ENOUGH. STOP THIS MADNESS
+    // Doesn't appear to be necessary, however I will keep the file in case I need it later
 
     public PlayerDisguiseMixin(ServerPlayerEntity player) {
         super(player);
@@ -36,7 +35,7 @@ public class PlayerDisguiseMixin extends ToggleableSuperpower {
             if (lookingAt instanceof ServerPlayerEntity lookingAtPlayer) {
                 lookingAtPlayer = PlayerUtils.getPlayerOrProjection(lookingAtPlayer);
                 if (!PlayerUtils.isFakePlayer(lookingAtPlayer)) {
-                    LifeSkinsCommand.stealSkin(player, lookingAtPlayer);
+                    LifeSkinsCommand.stealSkin(player, lookingAtPlayer.getNameForScoreboard());
                 }
             }
         }
@@ -44,6 +43,6 @@ public class PlayerDisguiseMixin extends ToggleableSuperpower {
 
     @Inject(method = "deactivate", at = @At("TAIL"), remap = false)
     public void deactivate(CallbackInfo ci) throws CommandSyntaxException {
-        LifeSkinsCommand.reloadSkin(getPlayer());
+        LifeSkinsCommand.reloadSkinSubin(getPlayer());
     }
 }

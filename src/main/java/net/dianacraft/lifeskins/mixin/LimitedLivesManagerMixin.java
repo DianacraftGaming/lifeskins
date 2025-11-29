@@ -11,8 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dianacraft.lifeskins.command.LifeSkinsCommand.getLivesForLimited;
-import static net.dianacraft.lifeskins.command.LifeSkinsCommand.reloadSkin;
+import static net.dianacraft.lifeskins.command.LifeSkinsCommand.*;
 import static net.mat0u5.lifeseries.Main.currentSeason;
 import static net.mat0u5.lifeseries.seasons.other.WatcherManager.isWatcher;
 
@@ -27,7 +26,7 @@ public abstract class LimitedLivesManagerMixin extends LivesManager {
         if (getPlayerLives(player) != null) prevLives = getPlayerLives(player);
         if (getLivesForLimited(lives) != getLivesForLimited(prevLives)){
             try {
-                reloadSkin(player, getLivesForLimited(lives));
+                reloadSkinSubin(player, lives);
             } catch (CommandSyntaxException ignored) {}
         }
     }
