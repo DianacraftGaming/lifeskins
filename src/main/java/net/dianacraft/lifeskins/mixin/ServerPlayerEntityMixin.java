@@ -21,8 +21,6 @@ public class ServerPlayerEntityMixin {
         if (currentSeason.getSeason() == Seasons.UNASSIGNED) return;
         ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
         if (!livesManager.hasAssignedLives(player)) return;
-        try {
-            reloadSkinSubin(player);
-        } catch (CommandSyntaxException ignored) {}
+        reloadSkin(player);
     }
 }

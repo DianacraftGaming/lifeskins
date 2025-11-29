@@ -25,9 +25,7 @@ public abstract class LimitedLivesManagerMixin extends LivesManager {
         int prevLives = -1;
         if (getPlayerLives(player) != null) prevLives = getPlayerLives(player);
         if (getLivesForLimited(lives) != getLivesForLimited(prevLives)){
-            try {
-                reloadSkinSubin(player, lives);
-            } catch (CommandSyntaxException ignored) {}
+            reloadSkin(player, lives);
         }
     }
 }

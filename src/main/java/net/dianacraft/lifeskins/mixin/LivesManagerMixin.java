@@ -4,6 +4,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.dianacraft.lifeskins.util.SkinPathFinder;
 import net.mat0u5.lifeseries.seasons.other.LivesManager;
 import net.mat0u5.lifeseries.seasons.season.Seasons;
+import net.mat0u5.lifeseries.seasons.subin.SubInManager;
+import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +29,12 @@ public abstract class LivesManagerMixin {
 
     @Inject(method = "resetPlayerLife", at = @At("HEAD"))
     private void resetPlayerLife(ServerPlayerEntity player, CallbackInfo ci) {
-        SkinPathFinder spf = new SkinPathFinder(player.getNameForScoreboard());
+        SkinPathFinder spf;
+        if (SubInManager.isSubbingIn(player.getUuid())){
+            spf = new SkinPathFinder(player, OtherUtils.profileName(SubInManager.getSubstitutedPlayer(player.getUuid())));
+        } else {
+            spf = new SkinPathFinder(player);
+        }
         if (spf.hasSkins() && player.isAlive()){
             //File f = new File(spf.getDirectoryPath()+"/default.png");
             //if(f.isFile()){
@@ -47,9 +54,7 @@ public abstract class LivesManagerMixin {
         int prevLives = -1;
         if (getPlayerLives(player) != null) prevLives = getPlayerLives(player);
         if (lives != prevLives){
-            try {
-                reloadSkinSubin(player, lives);
-            } catch (CommandSyntaxException ignored) {}
+            reloadSkin(player, lives);
         }
     }
 }

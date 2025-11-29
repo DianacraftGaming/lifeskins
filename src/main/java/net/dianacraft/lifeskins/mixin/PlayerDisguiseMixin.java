@@ -43,6 +43,6 @@ public class PlayerDisguiseMixin extends ToggleableSuperpower {
 
     @Inject(method = "deactivate", at = @At("TAIL"), remap = false)
     public void deactivate(CallbackInfo ci) throws CommandSyntaxException {
-        LifeSkinsCommand.reloadSkinSubin(getPlayer());
+        if (getPlayer() != null) LifeSkinsCommand.reloadSkin(getPlayer());
     }
 }
