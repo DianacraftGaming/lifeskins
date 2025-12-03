@@ -3,8 +3,8 @@
   "package": "net.dianacraft.lifeskins.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "LimitedLivesManagerMixin",
     "LivesManagerMixin",
+    "ScoreboardMixin",
     "SeasonMixin",
     "ServerPlayerEntityMixin"
   ],

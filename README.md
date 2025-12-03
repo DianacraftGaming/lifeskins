@@ -2,11 +2,11 @@
 A *fully server-side* mod for changing player skins depending on the life amount without needing to restart Minecraft! Requires the [Life Series](https://modrinth.com/mod/life-series/) mod for lives tracking! Also requires [Fabric Tailor](https://modrinth.com/mod/fabrictailor/) to run properly (Hoping to make it optional in a future update)
 
 ## How to use
-It's quite simple, really! Your skin will automatically update whenever your amount of lives changes, whether by death, commands, automatic assignment, you name it! It requires a bit of setting up though, how to do that is described below!
+It's quite simple, really! Your skin will automatically update whenever your amount of lives changes, whether by death, commands, automatic assignment, you name it! **It even automatically changes the skin for sub-ins!** It requires some setting up though, how to do that is described below!
 
 `/lifeskins reload` will manually set your skin to the one corresponding to your life amount if automatic reload failed
 
-`/lifeskins reloadAll` will reload the skins of all players, can only be run by an admin
+`/lifeskins reload <target>` will reload the skins of everyone specified in the <target> argument, can be either a specific player, or a selector. **This command can only be run by an admin**
 
 `/lifeskins setup` will show setup instructions for skins
 
@@ -29,7 +29,7 @@ Skins can be changed at runtime and *don't* require a server restart.
 
 `lives` - the minimum amount of lives you need to have for the skin to activate, for example `4`
 
-`team` - [optional] field, alternative to `lives`. Whenever a player is in a team that has a name matching to this field, this skin will be given. For example, `lives_2` or `watcher`
+`team` - can be used instead of `lives`, or in addition to it. Whenever a player is in a team that has a name matching to this field, this skin will be given. For example, `lives_2`, `watcher`, or any custom team.
 
 `slim` - whether the slim model should be used. overrides the global field from the file
 

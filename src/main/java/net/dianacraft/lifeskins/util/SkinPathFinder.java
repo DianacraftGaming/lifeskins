@@ -1,9 +1,11 @@
 package net.dianacraft.lifeskins.util;
 
 import net.mat0u5.lifeseries.Main;
+import net.mat0u5.lifeseries.seasons.season.Seasons;
 import net.mat0u5.lifeseries.seasons.subin.SubInManager;
 import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import com.google.gson.*;
@@ -29,49 +31,23 @@ public class SkinPathFinder {
     String directoryPath;
     //Skin defaultSkin;
 
-
     public SkinPathFinder(ServerPlayerEntity playerEntity){
         player = playerEntity;
-        playerUsername = playerEntity.getNameForScoreboard();
-        directoryPath = "config/lifeskins/"+playerUsername;
-
-        skinFile = new SkinFile(false);
-        Gson gson = new Gson();
-        try {
-            Reader reader = new FileReader(directoryPath + "/skins.json");
-            skinFile = gson.fromJson(reader, SkinFile.class);
-            reader.close();
-        } catch (IOException e) {
-            if (new File(directoryPath).mkdir()){
-                LOGGER.info("Created a life skins folder for {}", playerUsername);
-            }
-            try {
-                Writer writer = new FileWriter(directoryPath + "/skins.json");
-                gson.toJson(skinFile, writer);
-                writer.flush();
-                writer.close();
-            } catch (Exception f) {
-                if (LOGGER.isWarnEnabled())
-                    LOGGER.warn("Failed to initialize a skins.json file for " + playerUsername);
-            }
-        }
-        if (skinFile.getSkinArray() == null) {
-            skins = new SkinFile(false).getSkinArray();
+        if (SubInManager.isSubbingIn(playerEntity.getUuid())){
+            playerUsername = OtherUtils.profileName(SubInManager.getSubstitutedPlayer(playerEntity.getUuid()));
         } else {
-            skins = new ArrayList<>(skinFile.getSkinArray());
-            teamSkins = new ArrayList<>(skinFile.getSkinArray());
-            skins.removeIf(skin -> skin.getLifeCount() == null);
-
-            teamSkins = skinFile.getSkinArray();
-            teamSkins.removeIf(skin -> skin.getTeam() == null);
+            playerUsername = playerEntity.getNameForScoreboard();
         }
-        livesMap = initializeSkinMap();
-        teamMap = initialiseTeamMap();
+        defaults();
     }
 
     public SkinPathFinder(ServerPlayerEntity playerEntity, String subIn){
         player = playerEntity;
         playerUsername = subIn;
+        defaults();
+    }
+
+    private void defaults(){
         directoryPath = "config/lifeskins/"+playerUsername;
 
         skinFile = new SkinFile(false);
@@ -117,34 +93,31 @@ public class SkinPathFinder {
     }
 
     public Skin getSkin(){
-        if (player != null) {
-            String team = player.getScoreboardTeam().getName();
-            if (team != null) {
-                if (teamMap.containsKey(team)) {
-                    return teamMap.get(team);
-                }
-            }
+        Skin skin;
+        if (player.getScoreboardTeam() != null){
+            skin = getSkin(player.getScoreboardTeam().getName());
+            if (skin != null) return skin;
         }
 
-        int playerLives = 0;
-        if (Main.livesManager.hasAssignedLives(player)) {
-            playerLives = Main.livesManager.getPlayerLives(player);
-        }
-        if (getMapSkin(playerLives) == null) return null;
-        return getMapSkin(playerLives);
+        Integer playerLives = Main.livesManager.getPlayerLives(player);
+        if (playerLives == null) return null;
+        if (currentSeason.getSeason() == LIMITED_LIFE) playerLives = getLivesForLimited(playerLives);
+        return getSkin(playerLives);
     }
 
     public Skin getSkin(int lives){
+        return getMapSkin(lives);
+    }
+
+    public Skin getSkin(String team){
         if (player != null) {
-            String team = player.getScoreboardTeam().getName();
             if (team != null) {
                 if (teamMap.containsKey(team)) {
                     return teamMap.get(team);
                 }
             }
         }
-        if (getMapSkin(lives) == null) return null;
-        return getMapSkin(lives);
+        return null;
     }
 
     public String getSkinPath(Skin skin){
@@ -285,12 +258,7 @@ public class SkinPathFinder {
     }
 
     public Skin getSkin(ServerPlayerEntity player){
-        SkinPathFinder spf;
-        if (SubInManager.isSubbingIn(player.getUuid())){
-            spf = new SkinPathFinder(player, OtherUtils.profileName(SubInManager.getSubstitutedPlayer(player.getUuid())));
-        } else {
-            spf = new SkinPathFinder(player);
-        }
+        SkinPathFinder spf = new SkinPathFinder(player);
         if (spf.hasSkins()) {
             if (currentSeason.getSeason() == LIMITED_LIFE) {
                 return spf.getSkin(getLivesForLimited(player));
@@ -303,12 +271,7 @@ public class SkinPathFinder {
     }
 
     public Skin getSkin(ServerPlayerEntity player, int lives){
-        SkinPathFinder spf;
-        if (SubInManager.isSubbingIn(player.getUuid())){
-            spf = new SkinPathFinder(player, OtherUtils.profileName(SubInManager.getSubstitutedPlayer(player.getUuid())));
-        } else {
-            spf = new SkinPathFinder(player);
-        }
+        SkinPathFinder spf = new SkinPathFinder(player);
         if (spf.hasSkins()) {
             if (currentSeason.getSeason() == LIMITED_LIFE) {
                 return spf.getSkin(getLivesForLimited(lives));

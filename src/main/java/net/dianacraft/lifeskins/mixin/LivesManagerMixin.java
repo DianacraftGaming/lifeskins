@@ -29,32 +29,10 @@ public abstract class LivesManagerMixin {
 
     @Inject(method = "resetPlayerLife", at = @At("HEAD"))
     private void resetPlayerLife(ServerPlayerEntity player, CallbackInfo ci) {
-        SkinPathFinder spf;
-        if (SubInManager.isSubbingIn(player.getUuid())){
-            spf = new SkinPathFinder(player, OtherUtils.profileName(SubInManager.getSubstitutedPlayer(player.getUuid())));
-        } else {
-            spf = new SkinPathFinder(player);
-        }
+        SkinPathFinder spf = new SkinPathFinder(player);
         if (spf.hasSkins() && player.isAlive()){
-            //File f = new File(spf.getDirectoryPath()+"/default.png");
-            //if(f.isFile()){
-            //    SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getDirectoryPath()+"/default.png", SkinPathFinder.getSlim(spf.getSkin(Main.currentSeries.getPlayerLives(player)))));
-            //} else {
             SkinCommand.setSkin(player, () -> fetchSkinByName(player.getName().getString()));
-            //}
         }
 
-    }
-
-    @Inject(method = "setPlayerLives", at = @At("HEAD"))
-    public void setPlayerLives(ServerPlayerEntity player, int lives, CallbackInfo ci){
-
-        if (player == null) return;
-        if (isWatcher(player)) return;
-        int prevLives = -1;
-        if (getPlayerLives(player) != null) prevLives = getPlayerLives(player);
-        if (lives != prevLives){
-            reloadSkin(player, lives);
-        }
     }
 }

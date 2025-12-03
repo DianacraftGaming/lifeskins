@@ -7,7 +7,6 @@ import net.dianacraft.lifeskins.util.Skin;
 import net.dianacraft.lifeskins.util.SkinPathFinder;
 import net.mat0u5.lifeseries.seasons.subin.SubInManager;
 import net.mat0u5.lifeseries.utils.other.OtherUtils;
-import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -29,12 +28,7 @@ public class LifeSkinsCommand {
 
     private static int contextReloadSkin(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
-        SkinPathFinder spf;
-        if (SubInManager.isSubbingIn(player.getUuid())){
-            spf = new SkinPathFinder(player, OtherUtils.profileName(SubInManager.getSubstitutedPlayer(player.getUuid())));
-        } else {
-            spf = new SkinPathFinder(player);
-        }
+        SkinPathFinder spf = new SkinPathFinder(player);
         if (!livesManager.hasAssignedLives(player)) {
             player.sendMessage(Text.of("You have not been assigned any lives yet."));
             return -1;
@@ -46,12 +40,7 @@ public class LifeSkinsCommand {
     }
 
     public static int reloadSkin(ServerPlayerEntity player) {
-        SkinPathFinder spf;
-        if (SubInManager.isSubbingIn(player.getUuid())){
-            spf = new SkinPathFinder(player, OtherUtils.profileName(SubInManager.getSubstitutedPlayer(player.getUuid())));
-        } else {
-            spf = new SkinPathFinder(player);
-        }
+        SkinPathFinder spf = new SkinPathFinder(player);
 
         Skin skin;
         if (currentSeason.getSeason() == LIMITED_LIFE) skin = spf.getSkin(getLivesForLimited(player));
@@ -65,21 +54,11 @@ public class LifeSkinsCommand {
         return 1;
     }
 
-    public static void reloadSkin(ServerPlayerEntity player, int lives) {
-        SkinPathFinder spf;
-        if (SubInManager.isSubbingIn(player.getUuid())){
-            spf = new SkinPathFinder(player, OtherUtils.profileName(SubInManager.getSubstitutedPlayer(player.getUuid())));
-        } else {
-            spf = new SkinPathFinder(player);
+    public static void reloadSkin(ServerPlayerEntity player, Skin skin) {
+        if (skin != null) {
+            SkinPathFinder spf = new SkinPathFinder(player);
+            SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getSkinPath(skin), skin.getSlim()));
         }
-        Skin skin;
-        if (currentSeason.getSeason() == LIMITED_LIFE) skin = spf.getSkin(getLivesForLimited(lives));
-        else skin = spf.getSkin(lives);
-        if (skin == null) {
-            SkinCommand.setSkin(player, () -> fetchSkinByName(player.getNameForScoreboard()));
-            return;
-        }
-        SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getSkinPath(skin), skin.getSlim()));
     }
 
     public static void stealSkin(ServerPlayerEntity actor, String target){
@@ -92,9 +71,8 @@ public class LifeSkinsCommand {
         }
     }
 
-    public static void stealSkin(ServerPlayerEntity actor, String target, int lives){
+    public static void stealSkin(ServerPlayerEntity actor, String target, Skin skin){
         SkinPathFinder spf = new SkinPathFinder(actor, target);
-        Skin skin = spf.getSkin(lives);
         if (skin == null){
             SkinCommand.setSkin(actor, () -> fetchSkinByName(target));
         } else {
@@ -126,7 +104,7 @@ public class LifeSkinsCommand {
         }
     }
 
-    public static int reloadSkinFor(Collection<ServerPlayerEntity> players){
+    public static int reloadSkin(Collection<ServerPlayerEntity> players){
         for (ServerPlayerEntity player : players){
             reloadSkin(player);
         }
@@ -138,7 +116,7 @@ public class LifeSkinsCommand {
                 literal("lifeskins")
                         .then(literal("reload")
                                 .executes(LifeSkinsCommand::contextReloadSkin)
-                                .then(CommandManager.argument("player", EntityArgumentType.players()).requires(source -> (isAdmin(source.getPlayer()) || (source.getEntity() == null))).executes((context) -> {return reloadSkinFor(EntityArgumentType.getPlayers(context, "player"));}))
+                                .then(CommandManager.argument("player", EntityArgumentType.players()).requires(source -> (isAdmin(source.getPlayer()) || (source.getEntity() == null))).executes((context) -> {return reloadSkin(EntityArgumentType.getPlayers(context, "player"));}))
                         )/*
                         .then(literal("stealSkin")
                                 .requires(PermissionManager::isAdmin)
@@ -170,12 +148,7 @@ public class LifeSkinsCommand {
                                 .executes(context -> {
                                             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
                                             if (player != null) {
-                                                SkinPathFinder spf;
-                                                if (SubInManager.isSubbingIn(player.getUuid())){
-                                                    spf = new SkinPathFinder(player, OtherUtils.profileName(SubInManager.getSubstitutedPlayer(player.getUuid())));
-                                                } else {
-                                                    spf = new SkinPathFinder(player);
-                                                }
+                                                SkinPathFinder spf = new SkinPathFinder(player);
                                                 return spf.logSkins();
                                             }
                                             return -1;
