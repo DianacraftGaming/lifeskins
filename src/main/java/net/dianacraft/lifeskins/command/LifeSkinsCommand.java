@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.dianacraft.lifeskins.LifeSkins;
 import net.dianacraft.lifeskins.util.Skin;
 import net.dianacraft.lifeskins.util.SkinPathFinder;
 import net.dianacraft.lifeskins.util.SkinSwapMap;
@@ -54,6 +55,7 @@ public class LifeSkinsCommand {
             SkinCommand.setSkin(player, () -> fetchSkinByName(player.getNameForScoreboard()));
             return -1;
         }
+        LifeSkins.LOGGER.info(spf.getSkinPath(skin));
         SkinCommand.setSkin(player, () -> setSkinFromFile(spf.getSkinPath(skin), skin.getSlim()));
         return 1;
     }
@@ -121,24 +123,23 @@ public class LifeSkinsCommand {
                         .then(literal("reset")
                                 .requires(PermissionManager::isAdmin)
                                     .executes(context ->
-                                            {
-                                                SkinSwapMap.reset();
-                                                ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
-                                                player.sendMessage(Text.of("Reset the swapping system"));
-                                                return 1;
-                                            }
-                                    )
-                        )
-                        .then(literal("force")
-                                .requires(PermissionManager::isAdmin)
-                                .executes(context ->
                                         {
                                             SkinSwapMap.reset();
                                             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
                                             player.sendMessage(Text.of("Reset the swapping system"));
                                             return 1;
                                         }
-                                )
+                                    )
+                                    .then(argument("target", EntityArgumentType.players())
+                                        .executes(
+                                            context -> {
+                                                SkinSwapMap.reset(EntityArgumentType.getPlayers(context, "target"));
+                                                ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+                                                player.sendMessage(Text.of("Reset the swapping system for "+EntityArgumentType.getPlayers(context, "target").size()+" targets"));
+                                                return 1;
+                                            }
+                                        )
+                                    )
                         )
                         .then(literal("swap")
                             .requires(PermissionManager::isAdmin)
@@ -160,7 +161,7 @@ public class LifeSkinsCommand {
                                 )
                             )
                         )
-                        .then(literal("force")
+                        .then(literal("forceOffline")
                                 .requires(PermissionManager::isAdmin)
                                 .then(argument("player1", StringArgumentType.string())
                                         .then(argument("player2", StringArgumentType.string())
@@ -169,6 +170,23 @@ public class LifeSkinsCommand {
                                                             String player1 = StringArgumentType.getString(context, "player1");
                                                             String player2 = StringArgumentType.getString(context, "player2");
                                                             SkinSwapMap.force(player1, player2);
+                                                            ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+                                                            player.sendMessage(Text.of("Set "+player1+" to "+player2));
+                                                            return 1;
+                                                        }
+                                                )
+                                        )
+                                )
+                        )
+                        .then(literal("forceOnline")
+                                .requires(PermissionManager::isAdmin)
+                                .then(argument("player1", EntityArgumentType.player())
+                                        .then(argument("player2", EntityArgumentType.player())
+                                                .executes(context ->
+                                                        {
+                                                            ServerPlayerEntity player1 = EntityArgumentType.getPlayer(context, "player1");
+                                                            ServerPlayerEntity player2 = EntityArgumentType.getPlayer(context, "player2");
+                                                            SkinSwapMap.force(player1.getNameForScoreboard(), player2.getNameForScoreboard());
                                                             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
                                                             player.sendMessage(Text.of("Set "+player1+" to "+player2));
                                                             return 1;

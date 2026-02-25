@@ -20,7 +20,6 @@ public class ServerPlayerEntityMixin {
     @Inject(method = "onSpawn", at = @At("HEAD"))
     public void onSpawn(CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
-        SkinSwapMap.add(player.getNameForScoreboard());
         if (currentSeason.getSeason() == Seasons.UNASSIGNED) return;
         if (!livesManager.hasAssignedLives(player)) return;
         reloadSkin(player);

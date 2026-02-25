@@ -1,13 +1,18 @@
 package net.dianacraft.lifeskins.mixin;
 
+import net.dianacraft.lifeskins.util.SkinSwapMap;
 import net.mat0u5.lifeseries.seasons.boogeyman.BoogeymanManager;
 import net.mat0u5.lifeseries.seasons.season.Season;
 import net.mat0u5.lifeseries.seasons.secretsociety.SecretSociety;
 import net.minecraft.server.MinecraftServer;
 import net.mat0u5.lifeseries.utils.other.Time;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
@@ -33,5 +38,10 @@ public class SeasonMixin {
         timer.tick();
         this.boogeymanManager.tick();
         this.secretSociety.tick();
+    }
+
+    @Inject(method = "onPlayerJoin", at = @At("HEAD"))
+    public void onPlayerJoin(ServerPlayerEntity player, CallbackInfo ci) {
+        SkinSwapMap.add(player.getNameForScoreboard());
     }
 }
