@@ -1,6 +1,7 @@
 package net.dianacraft.lifeskins.mixin;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.dianacraft.lifeskins.util.SkinSwapMap;
 import net.mat0u5.lifeseries.seasons.season.Seasons;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -18,8 +19,9 @@ import static net.mat0u5.lifeseries.seasons.season.Seasons.LIMITED_LIFE;
 public class ServerPlayerEntityMixin {
     @Inject(method = "onSpawn", at = @At("HEAD"))
     public void onSpawn(CallbackInfo ci) {
-        if (currentSeason.getSeason() == Seasons.UNASSIGNED) return;
         ServerPlayerEntity player = (ServerPlayerEntity)(Object)this;
+        SkinSwapMap.add(player.getNameForScoreboard());
+        if (currentSeason.getSeason() == Seasons.UNASSIGNED) return;
         if (!livesManager.hasAssignedLives(player)) return;
         reloadSkin(player);
     }

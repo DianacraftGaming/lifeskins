@@ -30,11 +30,12 @@ public class SkinPathFinder {
 
     public SkinPathFinder(ServerPlayerEntity playerEntity){
         player = playerEntity;
-        if (SubInManager.isSubbingIn(playerEntity.getUuid())){
+        playerUsername = SkinSwapMap.get(player.getNameForScoreboard());
+        /*if (SubInManager.isSubbingIn(playerEntity.getUuid())){
             playerUsername = OtherUtils.profileName(SubInManager.getSubstitutedPlayer(playerEntity.getUuid()));
         } else {
             playerUsername = playerEntity.getNameForScoreboard();
-        }
+        }*/
         defaults();
     }
 
