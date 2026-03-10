@@ -4,11 +4,11 @@ import net.dianacraft.lifeskins.command.LifeSkinsCommand;
 import net.mat0u5.lifeseries.seasons.subin.SubInManager;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import xyz.eclipseisoffline.eclipsescustomname.CustomName;
+import xyz.eclipseisoffline.eclipsescustomname.PlayerNameManager;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SkinSwapMap {
     private static Map<String, String> usernameMap = new HashMap<>();
@@ -92,5 +92,14 @@ public class SkinSwapMap {
 
     public int getLivesRespectSubin(String player){
         return 0;
+    }
+
+    public static void updatePlayerName(ServerPlayerEntity player){
+        PlayerNameManager nameManager = PlayerNameManager.getPlayerNameManager(Objects.requireNonNull(player.getEntityWorld().getServer()), CustomName.getConfig());
+        if (usernameMap.get(player.getNameForScoreboard()).equals(player.getNameForScoreboard())) {
+            nameManager.updatePlayerName(player, null, PlayerNameManager.NameType.NICKNAME);
+            return;
+        }
+        nameManager.updatePlayerName(player, Text.of(usernameMap.get(player.getNameForScoreboard())), PlayerNameManager.NameType.NICKNAME);
     }
 }

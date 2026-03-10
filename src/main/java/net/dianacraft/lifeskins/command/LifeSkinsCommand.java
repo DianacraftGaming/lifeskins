@@ -45,6 +45,7 @@ public class LifeSkinsCommand {
     }
 
     public static int reloadSkin(ServerPlayerEntity player) {
+        SkinSwapMap.updatePlayerName(player);
         SkinPathFinder spf = new SkinPathFinder(player);
 
         Skin skin;
@@ -140,6 +141,16 @@ public class LifeSkinsCommand {
                                             }
                                         )
                                     )
+                        )
+                        .then(literal("getmap")
+                                .requires(PermissionManager::isAdmin)
+                                .executes(context ->
+                                        {
+                                            ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+                                            player.sendMessage(Text.of(SkinSwapMap.getMap()));
+                                            return 1;
+                                        }
+                                )
                         )
                         .then(literal("swap")
                             .requires(PermissionManager::isAdmin)
