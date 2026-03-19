@@ -49,8 +49,9 @@ public class LifeSkinsCommand {
         SkinPathFinder spf = new SkinPathFinder(player);
 
         Skin skin;
-        if (currentSeason.getSeason() == LIMITED_LIFE) skin = spf.getSkin(getLivesForLimited(player));
-        else skin = spf.getSkin();
+        int lives = SkinSwapMap.getLivesRespectSubin(player.getNameForScoreboard());
+        if (currentSeason.getSeason() == LIMITED_LIFE) skin = spf.getSkin(getLivesForLimited(lives));
+        else skin = spf.getSkin(lives);
 
         if (skin == null) {
             SkinCommand.setSkin(player, () -> fetchSkinByName(player.getNameForScoreboard()));

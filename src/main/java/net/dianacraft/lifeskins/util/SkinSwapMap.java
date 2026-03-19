@@ -1,8 +1,13 @@
 package net.dianacraft.lifeskins.util;
 
+import com.mojang.authlib.GameProfile;
 import net.dianacraft.lifeskins.command.LifeSkinsCommand;
+import net.dianacraft.lifeskins.mixin.ScoreboardMixin;
+import net.mat0u5.lifeseries.Main;
+import net.mat0u5.lifeseries.seasons.other.LivesManager;
 import net.mat0u5.lifeseries.seasons.subin.SubInManager;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
+import net.mat0u5.lifeseries.utils.player.ScoreboardUtils;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import xyz.eclipseisoffline.eclipsescustomname.CustomName;
@@ -90,8 +95,14 @@ public class SkinSwapMap {
         return false;
     }
 
-    public int getLivesRespectSubin(String player){
-        return 0;
+    public static int getLivesRespectSubin(String player){
+        String target = usernameMap.get(player);
+        ServerPlayerEntity targetPlayer = PlayerUtils.getPlayer(target);
+        if (targetPlayer == null){
+            Integer score = ScoreboardUtils.getScore(player, "Lives");
+            return score == null ? 0 : score;
+        }
+        return Main.livesManager.getPlayerLives(targetPlayer);
     }
 
     public static void updatePlayerName(ServerPlayerEntity player){
